@@ -112,12 +112,121 @@ print(status)
 
 
 #### JSON/YAML/INI 解析
-`json` 
+`json`
+```python
+import json
+
+# 读取 JSON 文件
+with open("config.json") as f:
+    data = json.load(f)
+
+# 写入 JSON 文件
+with open("output.json", "w") as f:
+    json.dump(data, f, indent=4)
+
+# 字符串解析
+obj = json.loads('{"key": "value"}')
+print(obj["key"])
+
+# 转换成json格式的字符串
+json.dumps()
+
+```
 `yaml`
-`configparser` 
+```python
+import yaml
+
+# 读取 YAML
+with open("config.yaml") as f:
+    data = yaml.safe_load(f)
+
+# 写入 YAML
+with open("output.yaml", "w") as f:
+    yaml.dump(data, f)
+```
+
+
+`configparser` (INI (Initialization) 配置文件)
+```python
+import configparser
+
+config = configparser.ConfigParser()
+config.read("settings.ini")
+
+# 获取值
+db_host = config["database"]["host"]
+
+# 修改并保存
+config["database"]["port"] = "3306"
+with open("settings.ini", "w") as f:
+    config.write(f)
+```
+
 #### 系统命令与子进程
 `subprocess`
+```python
+import subprocess
+
+# 运行命令并获取输出
+result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+print(result.stdout)
+
+# 简写方式
+output = subprocess.getoutput("df -h")
+print(output)
+
+
+# 执行命令并检查是否成功
+subprocess.check_call(["ls", "-l"])
+
+
+
+# 等效命令 `ping google.com`
+process = subprocess.Popen(
+    ["ping", "-c", "3", "google.com"],
+    stdout=subprocess.PIPE,
+    text=True
+)
+
+for line in process.stdout:
+    print(line.strip())
+
+```
+
 `shutil` 
+```python
+import shutil
+
+# 复制文件
+shutil.copy("a.txt", "backup/a.txt")
+# 复制并保留修改时间、权限
+shutil.copy2("test.txt", "backup/")
+#复制整个目录
+shutil.copytree("project", "project_backup")
+
+
+# 移动文件
+shutil.move("backup/a.txt", "final/a.txt")
+
+# 删除整个目录
+shutil.rmtree("temp")
+
+# 打包压缩
+shutil.make_archive("backup", "zip", "project_folder")
+# 解压文件
+shutil.unpack_archive("backup.zip", "restored")
+
+#修改文件使用者
+shutil.chown("file.txt", user="root", group="admin")
+
+#磁盘使用情况
+usage = shutil.disk_usage("/")
+print(usage.total, usage.used, usage.free)
+
+
+```
+
+
 #### 异步与多线程
 `asyncio`
 `threading` 
