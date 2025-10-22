@@ -4,25 +4,25 @@
 #### 文件与目录操作
 `os`:
 
-                        ```python
-                        import os
+```python
+import os
 
-                        # 获取当前工作目录
-                        print(os.getcwd())
+# 获取当前工作目录
+print(os.getcwd())
 
-                        # 创建文件夹
-                        os.makedirs("logs", exist_ok=True)
+# 创建文件夹
+os.makedirs("logs", exist_ok=True)
 
-                        # 列出文件
-                        for f in os.listdir("."):
-                            print(f)
+# 列出文件
+for f in os.listdir("."):
+    print(f)
 
-                        # 删除文件
-                        os.remove("old.log")
+# 删除文件
+os.remove("old.log")
 
-                        # 读取环境变量
-                        api_key = os.getenv("API_KEY")
-                        ```
+# 读取环境变量
+api_key = os.getenv("API_KEY")
+```
 
 `pathlib`:
 
@@ -57,3 +57,5 @@ REST API 工具
 ### JavaScript / Node.js
 
 ### Ruby
+
+
