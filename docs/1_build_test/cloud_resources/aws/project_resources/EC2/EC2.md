@@ -116,3 +116,36 @@ aws cloudformation describe-stack-events \
   --profile xin_xu_test
 
 ```
+
+
+## 网络与安全
+
+有指令可以直接查看，但是还是推荐在终端查看，更直接
+
+```bash
+#基本指令是
+aws ec2 describe-security-groups \
+  --profile xin_xu_test \
+  --region cn-northwest-1 \
+  --output json
+
+#查看特定信息
+aws ec2 describe-security-groups \
+  --profile xin_xu_test \
+  --region cn-northwest-1 \
+  --query "SecurityGroups[*].[GroupId, GroupName]" \
+  --output table
+
+```
+
+
+## 负载均衡
+
+其主要职责是流量分发来保证服务高可用。
+
+有以下几个种类：
+- Application
+- Network
+- Classic
+
+其主要配置是需要配置目标组
