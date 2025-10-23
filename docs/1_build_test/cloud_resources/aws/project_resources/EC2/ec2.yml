@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  EC2 instance stack with networking setup.
+  
+Parameters:
+  instance_name:
+    Type: String
+    Description: the name of instance
+    Default: test
+
+  image_id:
+    Type: AWS::EC2::Image::Id
+    Description: The id of the imagine.
+    Default: ami-01785c07ce58610d6
+
+  instance_type:
+    Type: String
+    Description: The instance type.
+    Default: t2.micro
+  
+  key_name:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: The name of the key pair.
+    Default: xin_xu_iot_test
+    
+  subnet_id:
+    Type: AWS::EC2::Subnet::Id
+    Description: The subnet id.
+    Default: subnet-071f770502ff0e115
+
+  sg_ids:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Description: One or more security groups
+    Default: sg-030745e022dbd286d
+
+
+Resources:
+  EC2instance: #这个是资源名称可以修改，跟docker的容器名是类似
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId:  !Ref image_id 
+      InstanceType: !Ref instance_type
+      KeyName: !Ref key_name
+      SubnetId: !Ref subnet_id
+      SecurityGroupIds: !Ref sg_ids
+      Tags:
+        - Key: Name
+          Value: !Ref instance_name
+
+# 如果之后的CI/CD
+#需要添加一个output来传递ec2的参数，方便之后资源间的联系
+Outputs:
+  InstanceId:
+    Value: !Ref EC2instance
+  PrivateIP:
+    Value: !GetAtt EC2instance.PrivateIp
+

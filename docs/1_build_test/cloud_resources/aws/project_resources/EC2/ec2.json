@@ -1,0 +1,56 @@
+{
+  "MaxCount": 1,
+  "MinCount": 1,
+  "ImageId": "ami-01785c07ce58610d6",
+  "InstanceType": "t3.micro",
+  "KeyName": "xin_xu_iot_test",
+  "EbsOptimized": true,
+  "BlockDeviceMappings": [
+    {
+      "DeviceName": "/dev/sda1",
+      "Ebs": {
+        "Encrypted": false,
+        "DeleteOnTermination": true,
+        "Iops": 3000,
+        "SnapshotId": "snap-08fc1af6e1e6e9371",
+        "VolumeSize": 8,
+        "VolumeType": "gp3",
+        "Throughput": 125
+      }
+    }
+  ],
+  "NetworkInterfaces": [
+    {
+      "SubnetId": "subnet-071f770502ff0e115",
+      "AssociatePublicIpAddress": false,
+      "DeviceIndex": 0,
+      "Groups": [
+        "sg-030745e022dbd286d"
+      ]
+    }
+  ],
+  "CreditSpecification": {
+    "CpuCredits": "unlimited"
+  },
+  "TagSpecifications": [
+    {
+      "ResourceType": "instance",
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "test"
+        }
+      ]
+    }
+  ],
+  "MetadataOptions": {
+    "HttpEndpoint": "enabled",
+    "HttpPutResponseHopLimit": 2,
+    "HttpTokens": "required"
+  },
+  "PrivateDnsNameOptions": {
+    "HostnameType": "ip-name",
+    "EnableResourceNameDnsARecord": false,
+    "EnableResourceNameDnsAAAARecord": false
+  }
+}
