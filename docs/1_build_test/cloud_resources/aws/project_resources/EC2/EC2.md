@@ -70,6 +70,8 @@ aws cloudformation create-stack \
 ### 排查问题
 
 最直观的问题显示就是创建不成功。
+如果在运行的实例突然`无法登陆或操作`，可以先查看实例下的`监控`模块查看具体原因
+
 使用代码查看：
 ```bash
 #对于 cli 命令
@@ -118,6 +120,7 @@ aws cloudformation describe-stack-events \
 ```
 
 
+
 ## 网络与安全
 
 有指令可以直接查看，但是还是推荐在终端查看，更直接
@@ -137,6 +140,13 @@ aws ec2 describe-security-groups \
   --output table
 
 ```
+2.如实例运行正常，但是无法登陆。这时就需要查看`安全组`。对于在私网上的实例，需要在本地使用vpn登陆，一般检测工具
+
+```bash
+ping <ip>
+```
+
+
 
 
 ## 负载均衡
@@ -148,4 +158,24 @@ aws ec2 describe-security-groups \
 - Network
 - Classic
 
-其主要配置是需要配置目标组
+常用的是ALB和NLB，其主要区别是
+ alb是应用层，从浏览器,APIs,web服务访问
+ nlb是网络层，一般用于数据传输(MySQL, PostgreSQL, MongoDB)
+
+其主要配置是两部分：
+ - 目标组创建
+ - alb 创建
+
+创建命令(https://docs.aws.amazon.com/cli/latest/reference/elbv2/create-load-balancer.html)
+
+这个建议手动配置，特别熟悉之后再使用指令来创建。
+
+```bash
+#具体详见创建指南
+aws elbv2 create-load-balancer \
+--name <name> \
+
+```
+可以在创建的alb下，查看资源映射和监控两个模块来观察和监测。
+
+
