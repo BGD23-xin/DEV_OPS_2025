@@ -16,7 +16,9 @@
 可以访问 `https://docs.aws.amazon.com/cli/v1/reference/ec2/run-instances.html` 来查看所有参数
 
 ```bash
+
 aws ec2 run-instances --profile <fire.name>  --cli-input-json file://<path of json>
+
 ```
 
 `file://<path of json>` 这部份可以是json字段或者是json文件，一般推荐json文件，防止出错。
@@ -66,6 +68,63 @@ aws cloudformation create-stack \
   --parameters file://params.json \
 
 ```
+### 其他创建方式
+
+使用`python`创建
+
+```python
+import boto3
+
+# 配置登陆信息（如果登陆aws的web服务的话需要requests_aws4auth）
+
+profile_name="xin_xu_test"
+region= "cn-northwest-1"
+service = "ec2"
+session = boto3.Session(profile_name=profile_name)
+# 登陆服务
+ec2 = session.client(service,region_name=region)
+
+#获取所有实例信息
+response = ec2.describe_instances()
+
+# 创建实例
+instance = ec2.create_instances(
+        ImageId=ami_id,
+        InstanceType=instance_type,
+        KeyName=key_name,
+        MinCount=1,
+        MaxCount=1)
+
+```
+
+使用`terreform`创建实例
+
+```json
+
+#配置登陆信息
+provider "aws" {
+  region  = var.region          # e.g. "cn-northwest-1"
+  profile = var.profile         # e.g. "xin_xu_test"
+}
+
+# instance_1可以理解为一个容器名，方便后续调用其输出
+resource "aws_instance" "instance_1" {
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+  subnet_id                   = var.subnet_id
+  vpc_security_group_ids      = var.security_group_ids
+  key_name                    = var.key_name
+
+  tags = {
+    Name        = var.name
+    ManagedBy   = "Terraform"
+    Environment = "dev"
+  }
+}
+
+
+```
+
 
 ### 排查问题
 
