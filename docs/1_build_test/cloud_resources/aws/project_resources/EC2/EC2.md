@@ -99,7 +99,7 @@ instance = ec2.create_instances(
 
 使用`terreform`创建实例
 
-```json
+```terraform
 
 #配置登陆信息
 provider "aws" {
