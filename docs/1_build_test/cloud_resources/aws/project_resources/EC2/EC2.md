@@ -159,8 +159,8 @@ ping <ip>
 - Classic
 
 常用的是ALB和NLB，其主要区别是
- alb是应用层，从浏览器,APIs,web服务访问
- nlb是网络层，一般用于数据传输(MySQL, PostgreSQL, MongoDB)
+ - alb是应用层，从浏览器,APIs,web服务访问
+ - nlb是网络层，一般用于数据传输(MySQL, PostgreSQL, MongoDB)
 
 其主要配置是两部分：
  - 目标组创建
