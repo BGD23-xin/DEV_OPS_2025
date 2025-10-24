@@ -1,0 +1,163 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Create an ECS Fargate Task Definition with an app container using awsfirelens
+  and a Fluent Bit log router sidecar (FireLens). Suitable for cn-northwest-1.
+
+Parameters:
+  TaskFamily:
+    Type: String
+    Default: task-name
+    Description: ECS Task Definition family name
+
+  AppImage:
+    Type: String
+    Default: <image>
+    Description: Image URI for the application container
+
+  AppContainerName:
+    Type: String
+    Default: app_1
+    Description: Name of the application container
+
+  LogRouterImage:
+    Type: String
+    Default: <image_rul>
+    Description: Image URI for the FireLens (Fluent Bit) log router container
+
+  TaskRoleArn:
+    Type: String
+    Default: <role_arn>
+    Description: ARN of IAM role that the task assumes
+
+  ExecutionRoleArn:
+    Type: String
+    Default: <task-exe_arn>
+    Description: ARN of IAM role used by ECS agent to pull images & write logs
+
+  AwsRegion:
+    Type: String
+    Default: cn-northwest-1
+    AllowedValues:
+      - cn-northwest-1
+      - cn-north-1
+    Description: Region env var for the log router
+
+  S3ConfigBucket:
+    Type: String
+    Default: xin-test-firehose
+    Description: Bucket name that stores fluent-bit config
+
+  S3ConfigKey:
+    Type: String
+    Default: fluent-bit/fluent-bit.conf
+    Description: Object key for fluent-bit config in S3
+
+  LogsGroupName:
+    Type: String
+    Default: /ecs/<container_name>
+    Description: CloudWatch Logs group for the log router (awslogs)
+
+  CpuUnits:
+    Type: String
+    Default: '1024' # 1 vCPU
+    AllowedValues: ['256','512','1024','2048','4096']
+    Description: Fargate task CPU
+
+  MemoryMiB:
+    Type: String
+    Default: '3072' # 3 GB
+    Description: Fargate task Memory in MiB (must be valid combo with CPU)
+
+
+Resources:
+  # 可选：先创建 Log Group，避免权限/时序问题
+  LogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref LogsGroupName
+      RetentionInDays: 14
+  
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Ref TaskFamily
+      NetworkMode: awsvpc
+      RequiresCompatibilities: [ FARGATE ]
+      
+      Cpu: !Ref CpuUnits
+      Memory: !Ref MemoryMiB
+      
+      ExecutionRoleArn: !Ref ExecutionRoleArn
+      TaskRoleArn: !Ref TaskRoleArn
+      
+      RuntimePlatform:
+        CpuArchitecture: X86_64
+        OperatingSystemFamily: LINUX
+      
+      # enableFaultInjection 不是 CFN 支持的属性，这里忽略
+      ContainerDefinitions:
+        # 1) 应用容器
+        - Name: !Ref AppContainerName
+          Image: !Ref AppImage
+          #Essential: true 表示重要容器，如果容器挂了会被判定为任务失败，默认配置
+          Essential: true
+          Cpu: 0
+          # 容器的端口映射
+          PortMappings:
+            - ContainerPort: 80
+              HostPort: 80
+              Protocol: tcp
+              AppProtocol: http
+              Name: !Sub '${AppContainerName}-80-tcp'
+          
+          LogConfiguration:
+            LogDriver: awsfirelens
+            Options: {}
+            SecretOptions: []
+          
+          Environment: []
+          MountPoints: []
+          SystemControls: []
+          VolumesFrom: []
+
+        # 2) FireLens 日志路由容器（Fluent Bit）
+        - Name: log_router
+          Image: !Ref LogRouterImage
+          Essential: true
+          Cpu: 0
+          User: '0'
+
+          FirelensConfiguration:
+            Type: fluentbit
+            # 需要高级选项可加 Options（如 enable-ecs-log-metadata，将业务容器的信息传递给firelens）
+            # Options:
+            #   enable-ecs-log-metadata: 'true'
+          Environment:
+            - Name: AWS_REGION
+              Value: !Ref AwsRegion
+            - Name: S3_CONFIG_BUCKET
+              Value: !Ref S3ConfigBucket
+            - Name: S3_CONFIG_KEY
+              Value: !Ref S3ConfigKey
+          
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogsGroupName
+              awslogs-region: !Ref AwsRegion
+              awslogs-stream-prefix: ecs
+              # 提醒：awslogs-create-group 在 Fargate/CFN 下常被忽略，已显式创建 LogGroup
+              # awslogs-create-group: 'true'
+            SecretOptions: []
+          MemoryReservation: 51
+          PortMappings: []
+          MountPoints: []
+          SystemControls: []
+          VolumesFrom: []
+
+      Volumes: []
+
+Outputs:
+  TaskDefinitionArn:
+    Description: ARN of the created ECS Task Definition
+    Value: !Ref TaskDefinition

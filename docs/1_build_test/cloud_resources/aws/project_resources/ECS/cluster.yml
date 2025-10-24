@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Minimal ECS Cluster (Fargate/Fargate Spot) with optional Service Connect defaults
+
+Parameters:
+  ClusterName:
+    Type: String
+    Default: cluster-name
+    Description: ECS Cluster name
+  ServiceConnectNamespace:
+    Type: String
+    Default: ""
+    Description: Optional Cloud Map namespace for Service Connect (leave empty to skip)
+  ContainerInsights:
+    Type: String
+    Default: disabled
+    AllowedValues: [enabled, disabled]
+    Description: Enable or disable CloudWatch Container Insights
+
+# 这个条件是spacename不为空，意思是ServiceConnectNamespace != "", 在后续的资源中，作为if的条件
+Conditions:
+  HasSCNamespace: !Not [!Equals [!Ref ServiceConnectNamespace, ""]]
+
+Resources:
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Ref ClusterName
+      CapacityProviders:
+        - FARGATE
+        - FARGATE_SPOT
+      ClusterSettings:
+        - Name: containerInsights
+          Value: !Ref ContainerInsights
+      Configuration:
+        ExecuteCommandConfiguration:
+          Logging: DEFAULT
+      ServiceConnectDefaults: !If
+        - HasSCNamespace
+        - Namespace: !Ref ServiceConnectNamespace
+        - !Ref "AWS::NoValue"
+
+Outputs:
+  ClusterArn:
+    Description: ECS Cluster ARN
+    Value: !Ref Cluster

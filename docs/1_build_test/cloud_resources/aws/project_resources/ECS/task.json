@@ -1,0 +1,83 @@
+{
+    "family": "<task_name>",
+    "containerDefinitions": [
+        {
+            "cpu": 0,
+            "environment": [],
+            "essential": true,
+            "image": "<image>",
+            "logConfiguration": {
+                "logDriver": "awsfirelens",
+                "options": {},
+                "secretOptions": []
+            },
+            "mountPoints": [],
+            "name": "<container_name>",
+            "portMappings": [
+                {
+                    "appProtocol": "http",
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "name": "<container_name>-80-tcp",
+                    "protocol": "tcp"
+                }
+            ],
+            "systemControls": [],
+            "volumesFrom": []
+        },
+        {
+            "cpu": 0,
+            "environment": [
+                {
+                    "name": "AWS_REGION",
+                    "value": "cn-northwest-1"
+                },
+                {
+                    "name": "S3_CONFIG_BUCKET",
+                    "value": "xin-test-firehose"
+                },
+                {
+                    "name": "S3_CONFIG_KEY",
+                    "value": "fluent-bit/fluent-bit.conf"
+                }
+            ],
+            "essential": true,
+            "firelensConfiguration": {
+                "type": "fluentbit"
+            },
+            "image": "<image_rul>",
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/<container_name>",
+                    "awslogs-create-group": "true",
+                    "awslogs-region": "cn-northwest-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "memoryReservation": 51,
+            "mountPoints": [],
+            "name": "log_router",
+            "portMappings": [],
+            "systemControls": [],
+            "user": "0",
+            "volumesFrom": []
+        }
+    ],
+    "taskRoleArn": "<role_arn>",
+    "executionRoleArn": "<task-exe_arn>",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "enableFaultInjection": false
+}
