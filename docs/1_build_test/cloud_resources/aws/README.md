@@ -15,7 +15,7 @@
 
 在使用cloud formation创建一个资源集合时，没有直接的命令如`terraform plan`来预览创建结果，需要进行如下操作
 
-
+[AWS CFN Intrinsic function reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/intrinsic-function-reference.html)
 ```bash
 #需要先创建一个预览集合
 aws cloudformation create-change-set \
