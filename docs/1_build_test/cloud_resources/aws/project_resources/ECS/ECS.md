@@ -80,7 +80,7 @@ aws cloudformation create-stack \
     - 运行状况检查宽限期(默认0s开始健康检查)
 - 网络配置(VPC, subnet, security group) 注:其中有个公有IP选项如果发在私有子网下，是分不到公有IP
 - 负载均衡器(ALB, NLB)
-- ASG（）
+- ASG（在fargate模式下，不需要配置这个选项）
 
 查看任务信息
 ```bash
