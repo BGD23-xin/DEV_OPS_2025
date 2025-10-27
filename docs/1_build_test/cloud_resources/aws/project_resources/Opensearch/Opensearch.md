@@ -1,4 +1,4 @@
-# Opensearh
+# Opensearch
 
 OpenSearch 可以理解为由AWS来托管的Elastc search 服务，它能扩容，冷热存储来优化存储，从而节约成本。
 
