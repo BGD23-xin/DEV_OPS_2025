@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Kinesis Data Firehose -> Amazon OpenSearch Service with DirectPut and Failed S3 backup (minimal)."
+
+Parameters:
+  DeliveryStreamName:
+    Type: String
+    Default: my-opensearch-stream
+    Description: Firehose delivery stream name
+  FirehoseRoleArn:
+    Type: String
+    Description: IAM role ARN used by Firehose (for OpenSearch and S3)
+  OpenSearchDomainArn:
+    Type: String
+    Description: Amazon OpenSearch Service Domain ARN
+  IndexName:
+    Type: String
+    Description: OpenSearch index name
+  IndexRotationPeriod:
+    Type: String
+    AllowedValues:
+      - NoRotation
+      - OneHour
+      - OneDay
+      - OneWeek
+      - OneMonth
+    Default: OneDay
+    Description: Rotation period for the index
+  BackupBucketArn:
+    Type: String
+    Description: S3 bucket ARN for failed document backup (e.g., arn:aws:s3:::my-bucket)
+
+Resources:
+  FirehoseToOpenSearch:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: !Ref DeliveryStreamName
+      DeliveryStreamType: DirectPut
+      AmazonOpenSearchServiceDestinationConfiguration:
+        RoleARN: !Ref FirehoseRoleArn
+        DomainARN: !Ref OpenSearchDomainArn
+        IndexName: !Ref IndexName
+        IndexRotationPeriod: !Ref IndexRotationPeriod
+        BufferingHints:
+          IntervalInSeconds: 60
+          SizeInMBs: 5
+        S3BackupMode: FailedDocumentsOnly
+        S3Configuration:
+          RoleARN: !Ref FirehoseRoleArn
+          BucketARN: !Ref BackupBucketArn
+        DocumentIdOptions:
+          DefaultDocumentIdFormat: FIREHOSE_DEFAULT
+
+Outputs:
+  DeliveryStreamNameOut:
+    Description: Name of the created Firehose delivery stream
+    Value: !Ref FirehoseToOpenSearch
