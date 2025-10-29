@@ -1,6 +1,6 @@
 ## ECR
 
-官方定义是安全、可扩展且可靠的托管容器镜像注册服务. 因而 其主要作用是托管项目所需的镜像. 
+官方定义是安全、可扩展且可靠的托管容器镜像注册服务. 因而 其主要作用是托管项目所需的镜像.
 
 [AWS cli](https://docs.aws.amazon.com/cli/latest/reference/ecr/create-repository.html)
 
