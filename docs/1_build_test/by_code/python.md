@@ -130,3 +130,116 @@ def unmark(num:int):
         bitmap[i] &= ~(1 << j)
 
 ```
+
+
+### 列表操作
+
+```python
+ls.insert(i, x) # 在列表ls的第i个位置增加元素x
+ls.clear() #删除列表ls所有元素
+ls.pop(i) # 将列表ls的第i个元素取出并从ls中删除该元素
+ls.remove(x)	#将列表中出现的第一个元素x删除
+ls.reverse() # 将列表ls中的元素反转
+ls.copy() # 生成一个新列表，复制ls中的所有元素
+
+lst.extend(lst1) #将lst1中的元素添加到lst的末尾
+```
+
+### 字典操作
+
+```python 
+d.pop(key, default) #键存在则返回相应值，同时删除键值对，否则返回默认值default
+d.popitem()	 # 随机从字典中取出一个兼职对，以元组(key, value)的形式返回，同时将该键值对从字典中删除
+d.clear() # 清空字典d
+
+
+
+items = ['Fruits', 'Books', 'Others']  # 键的列表
+prices = [96, 78, 85]  # 值的列表
+d = {items: prices for items, prices in zip(items, prices)}  # 两个列表生成一个字典
+print(d)  # {'Fruits': 96, 'Books': 78, 'Others': 85}
+
+
+items = ['Fruits', 'Books', 'Others']  # 键的列表
+prices = [96, 78, 85]  # 值的列表
+a = dict(zip(items, prices))
+print(a)  # {'Fruits': 96, 'Books': 78, 'Others': 85}
+
+```
+###  集合操作符
+
+
+```python 
+s.remove(x)
+s.discard(x)
+# 调用pop方法，一次只删除一个任意元素
+s.pop()
+```
+### 字符串操作
+```python 
+char(x) #返回Unicode编码x对应的单字符
+```
+
+### 递归函数
+
+```python 
+#就是在函数中复用本身
+
+def fun(n):  # 阶乘函数
+    if n == 1:
+        return 1
+    elif n == 2:
+        return 2
+    else:
+        return n * fun(n-1)
+
+
+print(fun(6)) # 720
+
+
+# 2.斐波那契数列 1 1 2 3 5 8 13 ...
+def fib(n):  # 斐波那契函数
+    if n == 1:
+        return 1
+    elif n == 2:
+        return 1
+    else:
+        return fib(n - 1) + fib(n - 2)  # 求斐波那契数列的第 n 项
+
+
+print(fib(6), end=' ')  # 8
+
+
+```
+### try-except-else 结构
+如果 try中没有抛出异常，则执行 else块；如果 try中抛异常，则执行 except块， else块不执行
+
+
+### try-except-else-finally
+finally 无论是否发生异常都会被执行，常用来解释 try块中申请的资源
+
+### traceback模块
+
+使用 traceback模块打印异常信息
+```python 
+import traceback
+
+try:
+    print(520)
+    print(1 / 0)
+except:
+    traceback.print_exc()
+```
+
+### 面对对象
+
+三大特征：
+
+- 封装
+- 继承(子类继承父类)
+- 方法重写（子类对父类的方法编写）
+
+
+```python 
+
+```
