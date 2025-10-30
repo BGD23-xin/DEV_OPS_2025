@@ -1,9 +1,10 @@
 # asyncio
 
 这是协程(coroutine)的模块。在学习这个模块之前，需要理清 `进程`,`线程`,`协程`这三个概念。
-进程(process)：相当于一个软件实例(vscode,python)
-[用户级线程(thread)](https://www.cnblogs.com/Survivalist/p/11527949.html#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%A4%9A%E6%A0%B8): 进程中最小的执行单元,一个线程一次只能执行一个任务,进程可以有多个线程。
-协程(coroutine)：是一个可以暂停和运行的函数，使python更高效使用CPU。
+
+- 进程(process)：相当于一个软件实例(vscode,python)
+- [用户级线程(thread)](https://www.cnblogs.com/Survivalist/p/11527949.html#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%A4%9A%E6%A0%B8): 进程中最小的执行单元,一个线程一次只能执行一个任务,进程可以有多个线程。
+- 协程(coroutine)：是一个可以暂停和运行的函数，使python更高效使用CPU。
 
 协程的作用是，在CPU 等待时间（1.网络请求 2.文件的读写 3.通信接口，APIs，timer 定时器 所产生的I/O等待），这个过程cpu是待机状态。通过暂停这个任务，来释放cpu，等接收到返回信息之后，cpu处于空闲时再重新运行。
 
