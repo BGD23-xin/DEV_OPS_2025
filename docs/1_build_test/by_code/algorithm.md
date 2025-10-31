@@ -9,12 +9,10 @@
 ```python
 # 这里是从小到大排序
 def selectionSort(nums):
-    for i in range(len(nums) - 1):  # 遍历 len(nums)-1 次
-        minIndex = i
-        for j in range(i + 1, len(nums)):
-            if nums[j] < nums[minIndex]:  # 更新最小值索引
-                minIndex = j  
-        nums[i], nums[minIndex] = nums[minIndex], nums[i] # 把最小数交换到前面
+    for _ in range(len(nums)-1):
+        for j in range(len(nums)-1):
+            if nums[j] > nums[j+1]:
+                nums[j], nums[j+1] = nums[j+1], nums[j]
     return nums
 ```
 
@@ -222,6 +220,7 @@ def countingSort(nums):
 
 ### 9.桶排序
 
+这的代码逻辑是 先确定最值, 将所有的数按照 桶的大小 分成若干个桶
 
 ```python
 
@@ -336,7 +335,7 @@ def bitmap_sort(nums,bitmap_per_block=32):
 ```python
 
 from collections import deque
-
+# 使用deque的好处是可以左右提取元素
 def bfs(graph, start):
     visited = []
     queue = deque([start])
@@ -355,27 +354,56 @@ def bfs(graph, start):
 这是用于遍历所有的路径
 
 ```python
-# 递归算法
+# 递归算法  基础版本 这里的探索是按照一定顺序探索的
 def dfs(graph, node, visited):
-
+    """
+    visited 已访问的节点，一般为空集
+    """
     if node not in visited:
+        # 这个是收集访问的节点
         visited.append(node)
+        
         for neighbor in graph[node]:
             dfs(graph, neighbor, visited)
     return visited
+# 迭代算法,也是按照一定顺序探索的
+# 这个基础版本没法解决 图回路的问题
+def dfs_iterate(graph,node):
+    visited = []
+    stack = [node]
+    # 通过堆的方式，从后往前将所有的点都遍历遍
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            visited.append(node)
+            stack.extend(graph[node])
 
-# 判断是否可达
-def dfs(graph,start,target, visited):
-    if start == target:
-        return True
+# 做了改进，可以随机访问节点的集合，但是还是没法解决回路的问题  
+def dfs_update(graph, start_node,target_node):
+    stack = [start_node]
+    visited = []
+    paths = []
+    while stack:
+        node = stack.pop()
+        paths.append(node)
+        if node == target_node:
 
-    if start not in visited:
-        visited.append(start)
-        for neighbor in graph[start]:
-            dfs(graph, neighbor,target, visited)
-            # 这里是为了一层一层返回
+            print("found target node")
+
+            print(" --> ".join(paths))
             return True
+        if node not in visited:
+            visited.append(node)
+            add_nodes = graph[node]
+            
+            # 将子节点集合打乱顺序 
+            random.shuffle(add_nodes)
+            
+            stack.extend(add_nodes)
+
+    print(" --> ".join(paths))
     return False
+
 
 
 ```

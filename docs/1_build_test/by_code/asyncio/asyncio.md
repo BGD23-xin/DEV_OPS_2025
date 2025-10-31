@@ -1,6 +1,6 @@
 # asyncio
 
-这是协程(coroutine)的模块。在学习这个模块之前，需要理清 `进程`,`线程（这里特制用户级线程）`,`协程`这三个概念。
+这是协程(coroutine)的模块。在学习这个模块之前，需要理清 `进程`,`线程（这里特指用户级线程）`,`协程`这三个概念。
 
 - 进程(process)：相当于一个软件实例(vscode,python)
 - [用户级线程(user-level thread)](https://www.cnblogs.com/Survivalist/p/11527949.html#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%A4%9A%E6%A0%B8): 进程中最小的执行单元,一个线程一次只能执行一个任务,进程可以有多个线程。
