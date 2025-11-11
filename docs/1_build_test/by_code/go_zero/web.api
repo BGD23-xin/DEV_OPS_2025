@@ -70,3 +70,11 @@ service openvpn_api {
 	get /api/users returns (listUsers)
 }
 
+
+//	cfg := l.svcCtx.Config
+
+	// if req.Username != cfg.Admin.Username || req.Password != cfg.Admin.Password {
+	// 	return nil, errors.New(401, "invalid username or password")
+
+	// }
+	// return &types.LoginResp{Token: "dumy token"}, nil
