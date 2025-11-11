@@ -1,0 +1,72 @@
+syntax = "v1"
+
+info (
+	title:   "OpenVPN web api"
+	desc:    "Api for openvpn"
+	version: "1.0"
+)
+
+type (
+	//--------------登陆-----------------
+	loginReq {
+		username string `json:"username"`
+		password string `json:"password"`
+	}
+	loginResp {
+		token string `json:"token"`
+	}
+	//--------------创建-----------------
+	createUserReq {
+		username string `json:"username"`
+	}
+	createUserResp {
+		profile string `json:"profile"`
+	}
+	//--------------删除-----------------
+	deleteUserReq {
+		username string `json:"username"`
+	}
+	deleteUserResp {
+		message string `json:"message"`
+	}
+	//--------------下载-----------------
+	downloadReq {
+		username string `json:"username"`
+	}
+	downloadResp {
+		download_url string `json:"download_url"`
+	}
+	//--------------用户接口列表-----------------
+	UsersItems {
+		username           string `json:"username"`
+		validate_days      string `json:"validate_days"`
+		available_networks string `json:"available_networks"`
+		operations         string `json:"operations"`
+	}
+	listUsers {
+		users []UsersItems `json:"users"`
+	}
+)
+
+service openvpn_api {
+	//--------- 登陆路由
+	@handler login
+	post /api/login (loginReq) returns (loginResp)
+
+	//---------创建路由
+	@handler createUser
+	post /api/user/create (createUserReq) returns (createUserResp)
+
+	//---------删除路由
+	@handler deleteUser
+	post /api/user/delete (deleteUserReq) returns (deleteUserResp)
+
+	//---------下载路由
+	@handler downloadUser
+	post /api/user/download (downloadReq) returns (downloadResp)
+
+	//---------显示用户
+	@handler listUsers
+	get /api/users returns (listUsers)
+}
+
